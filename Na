@@ -1,0 +1,39 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "Motor")
+public class HDHex extends OpMode {
+    private DcMotor leftHD;
+    private DcMotor rightHD;
+    private DcMotor corehexD;
+    private DcMotor corehexU;
+    @Override
+    public void init() {
+        leftHD = hardwareMap.get(DcMotor.class, "leftHD");
+        rightHD = hardwareMap.get(DcMotor.class, "rightHD");
+        corehexD = hardwareMap.get(DcMotor.class, "corehexD");
+        corehexU = hardwareMap.get(DcMotor.class, "corehexU");
+    }
+
+    public void init_loop() {
+    }
+
+    public void start() {
+        leftHD.setDirection(DcMotor.Direction.REVERSE);
+        rightHD.setDirection(DcMotor.Direction.FORWARD);
+        corehexD.setDirection(DcMotor.Direction.REVERSE);
+        corehexU.setDirection(DcMotor.Direction.FORWARD);
+
+    }
+    public void loop() {
+        leftHD.setPower(gamepad1.left_stick_y * 1);
+        rightHD.setPower(gamepad1.right_stick_y * 1);
+        corehexD.setPower(gamepad1.left_stick_x * 1);
+        corehexU.setPower(gamepad1.right_stick_x * 1);
+    }
+    public void stop(){
+    }
+}
