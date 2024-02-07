@@ -1,0 +1,68 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+
+@TeleOp(name = "Motor")
+public class HDHex extends OpMode {
+    private DcMotor leftHD;
+    private DcMotor rightHD;
+    private DcMotor corehexD;
+    private DcMotor corehexU;
+    private CRServo servo_grip;
+    private CRServo servo_arm;
+    @Override
+    public void init() {
+        leftHD = hardwareMap.get(DcMotor.class, "leftHD");
+        rightHD = hardwareMap.get(DcMotor.class, "rightHD");
+        corehexD = hardwareMap.get(DcMotor.class, "corehexD");
+        corehexU = hardwareMap.get(DcMotor.class, "corehexU");
+        servo_grip = hardwareMap.get(CRServo.class, "servo_grip");
+        servo_arm = hardwareMap.get(CRServo.class, "servo_arm");
+    }
+
+    public void init_loop() {
+    }
+
+    public void start() {
+        leftHD.setDirection(DcMotor.Direction.FORWARD);
+        rightHD.setDirection(DcMotor.Direction.REVERSE);
+        corehexD.setDirection(DcMotor.Direction.FORWARD);
+        corehexU.setDirection(DcMotor.Direction.REVERSE);
+
+    }
+    public void loop() {
+        leftHD.setPower(gamepad1.left_stick_y * 1);
+        rightHD.setPower(gamepad1.right_stick_y * 1);
+        corehexD.setPower(gamepad1.left_stick_x * 1);
+        corehexU.setPower(gamepad1.right_stick_x * 1);
+
+        if (gamepad2.x)
+        {
+            servo_grip.setPower(1);
+        }
+        else if(gamepad2.b)
+        {
+            servo_grip.setPower(-1);
+        }
+        else {
+            servo_grip.setPower(0);
+
+        }
+
+        if (gamepad2.y)
+        {
+            servo_arm.setPower(1);
+        } else if (gamepad2.a) {
+            servo_arm.setPower(-1);
+        }
+        else {
+            servo_arm.setPower(0);
+        }
+
+    }
+    public void stop(){
+    }
+}
