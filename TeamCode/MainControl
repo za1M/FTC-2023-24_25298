@@ -1,0 +1,85 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+
+@TeleOp
+public class MainControl extends OpMode {
+    private DcMotor leftHD;
+    private DcMotor rightHD;
+    private DcMotor corehexD;
+    private DcMotor corehexU;
+    private CRServo servo_grip;
+    private CRServo servo_arm;
+    @Override
+    public void init() {
+        leftHD = hardwareMap.get(DcMotor.class, "leftHD");
+        rightHD = hardwareMap.get(DcMotor.class, "rightHD");
+        corehexD = hardwareMap.get(DcMotor.class, "corehexD");
+        corehexU = hardwareMap.get(DcMotor.class, "corehexU");
+        servo_grip = hardwareMap.get(CRServo.class, "servo_grip");
+        servo_arm = hardwareMap.get(CRServo.class, "servo_arm");
+    }
+
+    public void init_loop() {
+    }
+
+    public void start()
+    {
+        leftHD.setDirection(DcMotor.Direction.FORWARD);
+        rightHD.setDirection(DcMotor.Direction.REVERSE);
+        corehexD.setDirection(DcMotor.Direction.FORWARD);
+        corehexU.setDirection(DcMotor.Direction.REVERSE);
+        
+        
+    }
+    
+    public void grip_pixel()
+    {
+        if (gamepad1.a)
+        {
+            corehexD.setPower(1);
+            sleep(2*change);
+            servo_arm.setPower(0.2);
+            sleep(1*change);
+            corehexD.setPower(0);
+            servo_grip.setPower(0.7);
+        }
+        else if (gamepad1.y)
+        {
+            corehexD.setPower(-1);
+            sleep(2*change);
+            servo_arm.setPower(0);
+            sleep(1*change);
+            corehexD.setPower(0);
+            servo_grip.setPower(0);
+        
+        }
+           
+        
+    }
+        
+        
+    int change = 10^3;
+    public void loop() 
+    {
+        leftHD.setPower(gamepad1.left_trigger * 1);
+        rightHD.setPower(gamepad1.right_trigger * 1);
+        //int stateA;
+        //if (gamepad1.a)stateA = 1;
+        //if (stateA == 1&&gamepad1.a)stateA = 0;
+        
+        grip_pixel();
+        
+
+    }
+    public void stop(){
+    }
+}
