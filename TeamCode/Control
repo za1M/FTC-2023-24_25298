@@ -1,0 +1,59 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp()
+public class Control extends OpMode {
+    private DcMotor leftHD;
+    private DcMotor rightHD;
+    private DcMotor corehex;
+    private DcMotor Corehex;
+    private CRServo servo;
+    @Override
+    public void init() {
+        leftHD = hardwareMap.get(DcMotor.class, "leftHD");
+        rightHD = hardwareMap.get(DcMotor.class, "rightHD");
+        corehex = hardwareMap.get(DcMotor.class, "corehex");
+        Corehex = hardwareMap.get(DcMotor.class, "Corehex");
+        servo = hardwareMap.get(CRServo.class, "servo");
+    }
+    public void init_loop() {
+    }
+
+    public void start() {
+        leftHD.setDirection(DcMotor.Direction.FORWARD);
+        rightHD.setDirection(DcMotor.Direction.REVERSE);
+        corehex.setDirection(DcMotor.Direction.FORWARD);
+        Corehex.setDirection(DcMotor.Direction.REVERSE);
+    
+        
+    }
+    public void loop()
+    {
+        leftHD.setPower(gamepad1.left_stick_y * 1);
+        rightHD.setPower(gamepad1.right_stick_y * 1);
+        corehex.setPower(gamepad1.right_stick_x * 0.5);
+        Corehex.setPower(gamepad1.left_stick_x * 0.5);
+        
+        if (gamepad1.x)
+        {
+            servo.setPower(0.7);
+        }
+        else if(gamepad1.b)
+        {
+            servo.setPower(-0.);
+        }
+        
+    }
+    public void stop(){
+
+    }
+
+
+    }
+
+
+
