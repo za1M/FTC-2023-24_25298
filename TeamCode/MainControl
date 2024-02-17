@@ -19,7 +19,8 @@ public class MainControl extends OpMode {
     private CRServo servo_grip;
     private CRServo servo_arm;
     @Override
-    public void init() {
+    public void init() 
+    {
         leftHD = hardwareMap.get(DcMotor.class, "leftHD");
         rightHD = hardwareMap.get(DcMotor.class, "rightHD");
         corehexD = hardwareMap.get(DcMotor.class, "corehexD");
@@ -37,8 +38,6 @@ public class MainControl extends OpMode {
         rightHD.setDirection(DcMotor.Direction.REVERSE);
         corehexD.setDirection(DcMotor.Direction.FORWARD);
         corehexU.setDirection(DcMotor.Direction.REVERSE);
-        
-        
     }
     
     public void grip_pixel()
