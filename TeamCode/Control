@@ -9,16 +9,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class Control extends OpMode {
     private DcMotor leftHD;
     private DcMotor rightHD;
-    private DcMotor corehex;
-    private DcMotor Corehex;
-    private CRServo servo;
+    private DcMotor corehexTruss;
+    private DcMotor corehexGrip;
+
+    private DcMotor corehexArm;
+    private CRServo servoGrip;
+
+    private boolean stateUp = false;
     @Override
     public void init() {
         leftHD = hardwareMap.get(DcMotor.class, "leftHD");
         rightHD = hardwareMap.get(DcMotor.class, "rightHD");
-        corehex = hardwareMap.get(DcMotor.class, "corehex");
-        Corehex = hardwareMap.get(DcMotor.class, "Corehex");
-        servo = hardwareMap.get(CRServo.class, "servo");
+        corehexTruss = hardwareMap.get(DcMotor.class, "corehexTruss");
+        corehexArm = hardwareMap.get(DcMotor.class, "CorehexArm");
+        corehexGrip = hardwareMap.get(DcMotor.class, "CorehexGrip");
+        servoGrip = hardwareMap.get(CRServo.class, "servoGrip");
     }
     public void init_loop() {
     }
@@ -26,34 +31,53 @@ public class Control extends OpMode {
     public void start() {
         leftHD.setDirection(DcMotor.Direction.FORWARD);
         rightHD.setDirection(DcMotor.Direction.REVERSE);
-        corehex.setDirection(DcMotor.Direction.FORWARD);
-        Corehex.setDirection(DcMotor.Direction.REVERSE);
-    
-        
+        corehexTruss.setDirection(DcMotor.Direction.FORWARD);
+        corehexArm.setDirection(DcMotor.Direction.REVERSE);
+        corehexGrip.setDirection(DcMotor.Direction.FORWARD);
+
+
     }
     public void loop()
     {
         leftHD.setPower(gamepad1.left_stick_y * 1);
         rightHD.setPower(gamepad1.right_stick_y * 1);
-        corehex.setPower(gamepad1.right_stick_x * 0.5);
-        Corehex.setPower(gamepad1.left_stick_x * 0.5);
-        
+
+
         if (gamepad1.x)
         {
-            servo.setPower(0.7);
+            corehexTruss.setPower(0.8);
+
         }
         else if(gamepad1.b)
         {
-            servo.setPower(-0.);
+            corehexTruss.setPower(-0.8);
         }
-        
+
+
+        if (gamepad1.y)
+        {
+            servoGrip.setPower(0.8);
+        }
+
+        else if (gamepad1.a) {
+            servoGrip.setPower(-0.8);
+        }
+
+        if (gamepad1.dpad_up&& !stateUp)stateUp = true;
+        if (gamepad1.dpad_up&& stateUp)stateUp = false;
+
+        if (stateUp)
+        {
+            leftHD.setPower(1);
+            rightHD.setPower(1);
+        }
     }
     public void stop(){
 
     }
 
 
-    }
+}
 
 
 
