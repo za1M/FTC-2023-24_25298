@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,24 +15,30 @@ public class Control extends OpMode {
 
     private DcMotor corehexArm;
     private CRServo servoGrip;
-    
+
     private boolean stateUp = false;
     @Override
     public void init() {
         leftHD = hardwareMap.get(DcMotor.class, "leftHD");
         rightHD = hardwareMap.get(DcMotor.class, "rightHD");
-        corehexTruss = hardwareMap.get(DcMotor.class, "corehexTruss");
-        corehexArm = hardwareMap.get(DcMotor.class, "CorehexArm");
-        corehexGrip = hardwareMap.get(DcMotor.class, "CorehexGrip");
+        corehexTruss = hardwareMap.get(DcMotorEx.class, "corehexTruss");
+        corehexArm = hardwareMap.get(DcMotor.class, "corehexArm");
+        corehexGrip = hardwareMap.get(DcMotor.class, "corehexGrip");
         servoGrip = hardwareMap.get(CRServo.class, "servoGrip");
     }
     public void init_loop() {
     }
 
     public void start() {
-        leftHD.setDirection(DcMotor.Direction.FORWARD);
-        rightHD.setDirection(DcMotor.Direction.REVERSE);
+        leftHD.setDirection(DcMotor.Direction.REVERSE);
+        rightHD.setDirection(DcMotor.Direction.FORWARD);
+
+
         corehexTruss.setDirection(DcMotor.Direction.FORWARD);
+        corehexTruss.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        corehexTruss.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         corehexArm.setDirection(DcMotor.Direction.REVERSE);
         corehexGrip.setDirection(DcMotor.Direction.FORWARD);
 
@@ -39,19 +46,30 @@ public class Control extends OpMode {
     }
     public void loop()
     {
+        boolean upCurrentSt = false;
+        boolean upPreviousSt = false;
+        boolean downCurrentSt = false;
+        boolean downPreviousSt = false;
+
         leftHD.setPower(gamepad1.left_stick_y * 1);
         rightHD.setPower(gamepad1.right_stick_y * 1);
 
         //Truss
-        if (gamepad1.x)
-        {
-            corehexTruss.setPower(0.8);
+       /* if (gamepad1.x)
+        {   corehexTruss.setTargetPosition(150);
+            corehexTruss.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            corehexTruss.setPower(0.55);
+
+
 
         }
         else if(gamepad1.b)
         {
-            corehexTruss.setPower(-0.8);
-        }
+            corehexTruss.setPower(-0.55);
+        }*/
+
+        corehexTruss.setPower(gamepad1.left_trigger);
+        
 
         //grip
         if (gamepad1.y)
@@ -62,15 +80,32 @@ public class Control extends OpMode {
         else if (gamepad1.a) {
             servoGrip.setPower(-0.8);
         }
-        //HD
-        if (gamepad1.dpad_up&& !stateUp)stateUp = true;
-        if (gamepad1.dpad_up&& stateUp)stateUp = false;
-        
-        if (stateUp) 
+        //dpad
+        upCurrentSt = gamepad1.dpad_up;
+        if (upCurrentSt != upPreviousSt)
         {
-            leftHD.setPower(1);
-            rightHD.setPower(1);
+            if (upCurrentSt)
+            {
+                leftHD.setPower(-1);
+                rightHD.setPower(-1);
+            }
         }
+        upPreviousSt = upCurrentSt;
+        telemetry.addData("Dpad_up state:", upCurrentSt);
+
+        downCurrentSt = gamepad1.dpad_down;
+        if (downCurrentSt != downPreviousSt)
+        {
+            if (downCurrentSt)
+            {
+                leftHD.setPower(1);
+                rightHD.setPower(1);
+            }
+        }
+        downPreviousSt = downCurrentSt;
+        telemetry.addData("Dpad_down state:", downCurrentSt);
+
+        telemetry.update();
     }
     public void stop(){
 
@@ -78,6 +113,5 @@ public class Control extends OpMode {
 
 
 }
-
 
 
