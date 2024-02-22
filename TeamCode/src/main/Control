@@ -1,0 +1,202 @@
+package org.firstinspires.ftc.teamcode;
+
+import android.drm.DrmInfoEvent;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp()
+public class Control extends OpMode {
+    private DcMotor leftHD;
+    private DcMotor rightHD;
+    private DcMotor corehexTruss;
+    private DcMotor corehexGrip;
+    private DcMotor corehexArm;
+    private DcMotor corehexString;
+    private CRServo servoGrip;
+    static final double     DRIVE_SPEED             = 0.6;
+    int ChangeTime = 10^3;
+    @Override
+    public void init() {
+        leftHD = hardwareMap.get(DcMotor.class, "leftHD");
+        rightHD = hardwareMap.get(DcMotor.class, "rightHD");
+
+        corehexTruss = hardwareMap.get(DcMotorEx.class, "corehexTruss");
+        corehexString = hardwareMap.get(DcMotor.class, "corehexString");
+
+        corehexArm = hardwareMap.get(DcMotor.class, "corehexArm");
+        corehexGrip = hardwareMap.get(DcMotor.class, "corehexGrip");
+
+        servoGrip = hardwareMap.get(CRServo.class, "servoGrip");
+    }
+    public void init_loop() {
+    }
+
+    public void start() {
+        leftHD.setDirection(DcMotor.Direction.REVERSE);
+        rightHD.setDirection(DcMotor.Direction.FORWARD);
+
+        corehexTruss.setDirection(DcMotor.Direction.FORWARD);
+        corehexTruss.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        corehexTruss.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        corehexArm.setDirection(DcMotorEx.Direction.FORWARD);
+        corehexArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        corehexArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        corehexString.setDirection((DcMotorSimple.Direction.FORWARD));
+        corehexString.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        corehexString.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        corehexGrip.setDirection(DcMotor.Direction.FORWARD);
+
+    }
+    public void wait(int second)
+    {
+        try {
+            Thread.sleep(second*ChangeTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void loop()
+    {
+        boolean upCurrentSt = false;
+        boolean upPreviousSt = false;
+        boolean downCurrentSt = false;
+        boolean downPreviousSt = false;
+        // Đầu tày gắp - gamepad1
+        {
+            //simple move
+            //base xe
+            leftHD.setPower(gamepad1.left_stick_y * 1);
+            rightHD.setPower(gamepad1.right_stick_y * 1);
+            //dpad
+            {
+                upCurrentSt = gamepad1.dpad_up;
+                if (upCurrentSt != upPreviousSt)
+                {
+                    if (upCurrentSt)
+                    {
+                        leftHD.setPower(DRIVE_SPEED);
+                        rightHD.setPower(DRIVE_SPEED);
+                    }
+                }
+                upPreviousSt = upCurrentSt;
+                telemetry.addData("Dpad_up state:", upCurrentSt);
+
+                downCurrentSt = gamepad1.dpad_down;
+                if (downCurrentSt != downPreviousSt)
+                {
+                    if (downCurrentSt)
+                    {
+                        leftHD.setPower(-DRIVE_SPEED);
+                        rightHD.setPower(-DRIVE_SPEED);
+                    }
+                }
+                downPreviousSt = downCurrentSt;
+                telemetry.addData("Dpad_down state:", downCurrentSt);
+            }
+
+
+            //Auto turn
+            if (!rightHD.isBusy()&&!leftHD.isBusy())
+            {
+                rightHD.setPower(gamepad1.left_trigger);
+                leftHD.setPower(gamepad1.right_trigger);
+            }
+
+            //Đặt Pixel
+            int posArm = corehexArm.getCurrentPosition();
+            telemetry.addData("Arm Pos:", posArm);
+
+            double ArmPower = 1;
+            int Ytime = 0;
+            if (gamepad1.y)
+            {
+                corehexArm.setTargetPosition(300);
+                corehexArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                corehexArm.setPower(ArmPower);
+                Ytime += 1;
+            }
+            if (gamepad1.a)
+            {
+                corehexArm.setTargetPosition(0);
+                corehexArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                corehexArm.setPower(-1);
+            }
+
+            //corehexTruss
+        }
+
+        // Đầu đi nhặt - gamepad2
+        {
+            leftHD.setPower(gamepad2.right_stick_y * 1);
+            rightHD.setPower(gamepad2.left_stick_y * 1);
+            //dpad
+            upCurrentSt = gamepad2.dpad_up;
+            if (upCurrentSt != upPreviousSt)
+            {
+                if (upCurrentSt)
+                {
+                    leftHD.setPower(-DRIVE_SPEED);
+                    rightHD.setPower(-DRIVE_SPEED);
+                }
+            }
+            upPreviousSt = upCurrentSt;
+            telemetry.addData("Dpad_up state:", upCurrentSt);
+
+            downCurrentSt = gamepad2.dpad_down;
+            if (downCurrentSt != downPreviousSt)
+            {
+                if (downCurrentSt)
+                {
+                    leftHD.setPower(DRIVE_SPEED);
+                    rightHD.setPower(DRIVE_SPEED);
+                }
+            }
+            downPreviousSt = downCurrentSt;
+            telemetry.addData("Dpad_down state:", downCurrentSt);
+
+            //Auto turn
+            if (!rightHD.isBusy()&&!leftHD.isBusy())
+            {
+                rightHD.setPower(gamepad1.right_trigger);
+                leftHD.setPower(gamepad1.left_trigger);
+            }
+        }
+
+        //Truss
+        /*if (gamepad1.x)
+        {
+            corehexTruss.setTargetPosition(5);
+            corehexTruss.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            corehexTruss.setPower(0.3);
+        }
+        else if(gamepad1.b)
+        {
+            corehexTruss.setPower(-0.5);
+        }*/
+
+        //grip
+
+
+        corehexString.setPower(gamepad1.right_stick_x);
+
+        telemetry.update();
+    }
+    public void stop(){
+
+    }
+
+
+}
+
+
