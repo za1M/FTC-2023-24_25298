@@ -185,7 +185,15 @@ public class Auto extends LinearOpMode {
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
         //driveStraight(DRIVE_SPEED, 30, 0);
-        turnToHeading(TURN_SPEED, 90);
+        String Alliance = "RED";
+
+        if (Alliance == "RED")
+        {
+            turnToHeading(TURN_SPEED, 90);
+            driveStraight(DRIVE_SPEED, 10, 0 );
+            
+        }
+
         //holdHeading(TURN_SPEED, 90,0.1);
         //driveStraight(DRIVE_SPEED, 120, 0 );
 
