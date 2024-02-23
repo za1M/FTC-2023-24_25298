@@ -187,12 +187,18 @@ public class Auto extends LinearOpMode {
         //driveStraight(DRIVE_SPEED, 30, 0);
         String Alliance = "RED";
 
+
+        douvle AngleToTurn = 90;
         if (Alliance == "RED")
         {
-            turnToHeading(TURN_SPEED, 90);
-            driveStraight(DRIVE_SPEED, 10, 0 );
-            
+            turnToHeading(TURN_SPEED, AngleToTurn);
+           
+        }else
+        {
+            turnToHeading(TURN_SPEED, -AngleToTurn);
         }
+         driveStraight(DRIVE_SPEED, 10, 0 );
+
 
         //holdHeading(TURN_SPEED, 90,0.1);
         //driveStraight(DRIVE_SPEED, 120, 0 );
